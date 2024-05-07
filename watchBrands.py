@@ -8,5 +8,5 @@ watch_brands = [
     "Baume & Mercier", "Alpina", "Glashütte Original", "Junghans", "Laurent Ferrier", "MB&F", "Piaget", 
     "Roger Dubuis", "Van Cleef & Arpels", "Arnold & Son", "Bovet", "Czapek", "De Bethune", "H. Moser & Cie",
     "HYT", "Kudoke", "Louis Moinet", "Meistersinger", "Reservoir", "Romain Jerome", "Sarpaneva", "Urwerk",
-    "Voutilainen", "Waldan", "Zodiac"
+    "Voutilainen", "Waldan", "Zodiac","Swatch"
 ]
