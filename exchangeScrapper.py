@@ -1,21 +1,18 @@
+import os
 import praw
 import pandas as pd
 from datetime import datetime, timezone
 import re
-from config import (
-    reddit_client_id, reddit_client_secret, reddit_user_agent,
-    reddit_username, reddit_password, pg_host, pg_database, pg_user, pg_password
-)
 from watchBrands import watch_brands
 import psycopg2
 
 def run_scrapper():
     reddit = praw.Reddit(
-        client_id=reddit_client_id,
-        client_secret=reddit_client_secret,
-        user_agent=reddit_user_agent,
-        username=reddit_username,
-        password=reddit_password,
+        client_id=os.getenv('reddit_client_id'),
+        client_secret=os.getenv('reddit_client_secret'),
+        user_agent=os.getenv('reddit_user_agent'),
+        username=os.getenv('reddit_username'),
+        password=os.getenv('reddit_password'),
     )
 
     subreddit = reddit.subreddit("watchexchange")
@@ -47,23 +44,21 @@ def find_brand_and_price(title):
         if brand_name.lower() in title.lower():
             brand = brand_name
             break
-    # Regex to find price patterns like $1000 or USD 1500
     price_pattern = r'\$(\d+)|USD\s(\d+)'
     price_matches = re.findall(price_pattern, title)
     if price_matches:
-        # Flatten the list of tuples and filter out None values, then convert to int
         price = [int(num) for tup in price_matches for num in tup if num][0]
     else:
         price = None
     return brand, price
 
-
 def insert_posts(df):
     conn = psycopg2.connect(
-        host=pg_host,
-        database=pg_database,
-        user=pg_user,
-        password=pg_password)
+        host=os.getenv('pg_host'),
+        database=os.getenv('pg_database'),
+        user=os.getenv('pg_user'),
+        password=os.getenv('pg_password')
+    )
     cur = conn.cursor()
     for _, row in df.iterrows():
         cur.execute("""
@@ -74,6 +69,7 @@ def insert_posts(df):
     conn.commit()
     cur.close()
     conn.close()
+
 import time 
 if __name__ == "__main__":
     run_scrapper()
