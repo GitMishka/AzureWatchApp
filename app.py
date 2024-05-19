@@ -4,7 +4,6 @@ from scraper import run_scraper
 
 app = Flask(__name__)
 
-# Event flag to control the execution of the scraper thread
 stop_event = threading.Event()
 
 @app.route('/')

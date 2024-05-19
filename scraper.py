@@ -83,5 +83,5 @@ def insert_posts(df):
 
 import time 
 if __name__ == "__main__":
-    run_scrapper()
+    run_scraper()
     time.sleep(300)
