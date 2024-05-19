@@ -6,13 +6,24 @@ import re
 from watchBrands import watch_brands
 import psycopg2
 
+
+reddit_username = os.getenv('REDDIT_USERNAME')
+reddit_password = os.getenv('REDDIT_PASSWORD')
+reddit_client_id = os.getenv('REDDIT_CLIENT_ID')
+reddit_client_secret = os.getenv('REDDIT_CLIENT_SECRET')
+
+pg_host = os.getenv('PG_HOST')
+pg_database = os.getenv('PG_DATABASE')
+pg_user = os.getenv('PG_USER')
+pg_password = os.getenv('PG_PASSWORD')
+
 def run_scrapper():
     reddit = praw.Reddit(
-        client_id=os.getenv('reddit_client_id'),
-        client_secret=os.getenv('reddit_client_secret'),
-        user_agent=os.getenv('reddit_user_agent'),
-        username=os.getenv('reddit_username'),
-        password=os.getenv('reddit_password'),
+        client_id=os.getenv('REDDIT_CLIENT_ID'),
+        client_secret=os.getenv('REDDIT_CLIENT_SECRET'),
+        password=os.getenv('REDDIT_PASSWORD'),
+        user_agent=os.getenv('REDDIT_USER_AGENT'),
+        username=os.getenv('REDDIT_USERNAME')
     )
 
     subreddit = reddit.subreddit("watchexchange")
@@ -54,10 +65,10 @@ def find_brand_and_price(title):
 
 def insert_posts(df):
     conn = psycopg2.connect(
-        host=os.getenv('pg_host'),
-        database=os.getenv('pg_database'),
-        user=os.getenv('pg_user'),
-        password=os.getenv('pg_password')
+        host=os.getenv('PG_HOST'),
+        database=os.getenv('PG_DATABASE'),
+        user=os.getenv('PG_USER'),
+        password=os.getenv('PG_PASSWORD')
     )
     cur = conn.cursor()
     for _, row in df.iterrows():
