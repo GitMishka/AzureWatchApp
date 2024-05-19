@@ -1,30 +1,30 @@
-from flask import Flask, jsonify
-import multiprocessing
-import os
-import exchangeScrapper  # Assuming your scraping code is in 'exchangeScrapper.py'
+from flask import Flask, render_template, request, jsonify
+import threading
+from scraper import run_scraper
 
 app = Flask(__name__)
-process = None
 
-@app.route('/start_scraper', methods=['POST'])
+# Event flag to control the execution of the scraper thread
+stop_event = threading.Event()
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/start', methods=['POST'])
 def start_scraper():
-    global process
-    if process is None or not process.is_alive():
-        process = multiprocessing.Process(target=exchangeScrapper.run_scrapper)
-        process.start()
-        return jsonify({'status': 'scraper started'}), 200
-    else:
-        return jsonify({'status': 'scraper already running'}), 200
+    global scraper_thread
+    if not stop_event.is_set():
+        stop_event.clear()
+        scraper_thread = threading.Thread(target=run_scraper, args=(stop_event,))
+        scraper_thread.start()
+        return jsonify({'message': 'Scraper started'}), 200
+    return jsonify({'message': 'Scraper already running'}), 200
 
-@app.route('/stop_scraper', methods=['POST'])
+@app.route('/stop', methods=['POST'])
 def stop_scraper():
-    global process
-    if process is not None and process.is_alive():
-        process.terminate()  # or use a more graceful shutdown method
-        process.join()
-        return jsonify({'status': 'scraper stopped'}), 200
-    else:
-        return jsonify({'status': 'scraper not running'}), 200
+    stop_event.set()
+    return jsonify({'message': 'Scraper stopped'}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True)

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Watch Scraper Control</title>
+</head>
+<body>
+    <h1>Watch Scraper Control Panel</h1>
+    <button onclick="startScraper()">Start Scraping</button>
+    <button onclick="stopScraper()">Stop Scraping</button>
+    <script>
+        function startScraper() {
+            fetch('/start', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => alert(data.message));
+        }
+        function stopScraper() {
+            fetch('/stop', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => alert(data.message));
+        }
+    </script>
+</body>
+</html>

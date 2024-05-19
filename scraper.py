@@ -17,7 +17,7 @@ pg_database = os.getenv('PG_DATABASE')
 pg_user = os.getenv('PG_USER')
 pg_password = os.getenv('PG_PASSWORD')
 
-def run_scrapper():
+def run_scraper():
     reddit = praw.Reddit(
         client_id=os.getenv('REDDIT_CLIENT_ID'),
         client_secret=os.getenv('REDDIT_CLIENT_SECRET'),
